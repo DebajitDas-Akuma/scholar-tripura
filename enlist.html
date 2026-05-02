@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enlist Your Books — Scholar Tripura</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <div class="logo-icon">📚</div>
+    <div>
+      <span class="brand-text">Scholar Tripura</span>
+      <span class="brand-sub">Book Marketplace</span>
+    </div>
+  </a>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  <ul class="navbar-nav" id="main-nav">
+    <li><a href="index.html">Browse</a></li>
+    <li><a href="enlist.html" class="btn-enlist active">+ Enlist My Books</a></li>
+  </ul>
+</nav>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <h1>Enlist Your Books</h1>
+  <p>List your books to reach hundreds of students across Tripura</p>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<div style="background:var(--white);border-bottom:1px solid var(--cream-dark);padding:1.25rem 2rem;">
+  <div style="max-width:680px;margin:0 auto;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;text-align:center;">
+    <div>
+      <div style="font-size:1.5rem;margin-bottom:0.25rem;">📝</div>
+      <div style="font-size:0.8rem;font-weight:600;color:var(--ink);">1. Fill the form</div>
+      <div style="font-size:0.75rem;color:var(--ink-muted);">Add book details &amp; photos</div>
+    </div>
+    <div style="color:var(--cream-dark);font-size:1.5rem;align-self:center;">→</div>
+    <div>
+      <div style="font-size:1.5rem;margin-bottom:0.25rem;">🔍</div>
+      <div style="font-size:0.8rem;font-weight:600;color:var(--ink);">2. Admin review</div>
+      <div style="font-size:0.75rem;color:var(--ink-muted);">We review within 24h</div>
+    </div>
+    <div style="color:var(--cream-dark);font-size:1.5rem;align-self:center;">→</div>
+    <div>
+      <div style="font-size:1.5rem;margin-bottom:0.25rem;">🚀</div>
+      <div style="font-size:0.8rem;font-weight:600;color:var(--ink);">3. Go live!</div>
+      <div style="font-size:0.75rem;color:var(--ink-muted);">Listed for all buyers</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FORM ── -->
+<div class="form-container">
+  <div class="form-card">
+    <form id="enlist-form" novalidate>
+
+      <!-- Book Details -->
+      <div class="form-section-title">📚 Book Details</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Book Name <span class="req">*</span></label>
+          <input type="text" name="bookName" required placeholder="Full title of the book">
+          <span class="error-msg"></span>
+        </div>
+        <div class="form-group">
+          <label>Author <span class="req">*</span></label>
+          <input type="text" name="author" required placeholder="Author's name">
+          <span class="error-msg"></span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Publication</label>
+          <input type="text" name="pubDate" placeholder="e.g. 2022 or Jan 2020">
+          <span class="error-msg"></span>
+        </div>
+        <div class="form-group">
+          <label>Subject / Category <span class="req">*</span></label>
+          <select name="subject" required>
+            <option value="">Select category…</option>
+            <option>Science</option>
+            <option>Humanities</option>
+            <option>Commerce</option>
+            <option>Mathematics</option>
+            <option>Psychology</option>
+            <option>Self-Help</option>
+            <option>Fiction</option>
+            <option>History</option>
+            <option>Technology</option>
+            <option>Medical</option>
+            <option>Law</option>
+            <option>Other</option>
+          </select>
+          <span class="error-msg"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Condition <span class="req">*</span></label>
+        <select name="condition" required>
+          <option value="">Select condition…</option>
+          <option value="New">New — Never used, like fresh from store</option>
+          <option value="Old">Old / Used — Has been read/used before</option>
+        </select>
+        <span class="error-msg"></span>
+      </div>
+
+      <div class="form-group">
+        <label>Brief Description (optional)</label>
+        <textarea name="description" placeholder="Edition, syllabus, special features, notes inside…" rows="3"></textarea>
+      </div>
+
+      <hr class="form-divider">
+
+      <!-- Pricing -->
+      <div class="form-section-title">💰 Pricing</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Selling Price (₹) <span class="req">*</span></label>
+          <input type="number" name="sellingPrice" required min="1" placeholder="e.g. 250">
+          <span class="error-msg"></span>
+        </div>
+        <div class="form-group">
+          <label>Renting Price / Month (₹)</label>
+          <input type="number" name="rentingPrice" min="1" placeholder="Leave blank if not for rent">
+          <span class="error-msg"></span>
+        </div>
+      </div>
+
+      <hr class="form-divider">
+
+      <!-- Images -->
+      <div class="form-section-title">📷 Book Photos (up to 3 images, max 1MB each)</div>
+
+      <div class="form-group">
+        <div class="img-upload-area" id="upload-area">
+          <input type="file" id="img-input" accept="image/*" multiple>
+          <div class="upload-icon">📷</div>
+          <div class="upload-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+          <div class="upload-limit">JPEG, PNG, WEBP · Max 1MB each · Up to 3 images</div>
+        </div>
+        <div class="img-previews" id="img-previews"></div>
+        <span class="error-msg" id="img-error"></span>
+      </div>
+
+      <hr class="form-divider">
+
+      <!-- Contact -->
+      <div class="form-section-title">📞 Your Contact Details</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number <span class="req">*</span></label>
+          <input type="tel" name="phone" required data-type="phone"
+            placeholder="10-digit mobile number" maxlength="10" inputmode="numeric">
+          <span class="error-msg"></span>
+        </div>
+        <div class="form-group">
+          <label>Your Name <span class="req">*</span></label>
+          <input type="text" name="sellerName" required placeholder="Your full name">
+          <span class="error-msg"></span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Address / Location <span class="req">*</span></label>
+        <textarea name="address" required placeholder="Your town / locality (for buyer reference)" rows="2"></textarea>
+        <span class="error-msg"></span>
+      </div>
+
+      <hr class="form-divider">
+
+      <div style="background:var(--amber-pale);border-radius:var(--radius);padding:1rem;margin-bottom:1.25rem;font-size:0.85rem;color:var(--ink-light);">
+        ℹ️ <strong>Review Notice:</strong> Your listing will be reviewed by our admin before going live. This usually takes within 24 hours.
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
+        Submit for Review →
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- ── SUCCESS MODAL ── -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal" style="text-align:center;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🎉</div>
+    <h2 style="font-family:'Playfair Display',serif;margin-bottom:0.5rem;">Submitted!</h2>
+    <p style="color:var(--ink-muted);margin-bottom:1.5rem;">
+      Your book listing has been submitted for review. We'll notify you once it's approved and live.
+    </p>
+    <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+      <a href="enlist.html" class="btn btn-outline btn-lg" onclick="document.getElementById('success-modal').classList.remove('open')">List Another</a>
+      <a href="index.html" class="btn btn-primary btn-lg">Browse Books</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script type="module">
+import { submitEnlistRequest } from "./firebase.js";
+import {
+  initNavbar, showToast, validateForm, validateField,
+  validateImages, openModal, initModals, CONFIG,
+  uploadToCloudinary
+} from "./script.js";
+
+initNavbar();
+initModals();
+
+// ── Image Upload ──────────────────────────────────────────────
+let selectedFiles = [];
+
+const uploadArea  = document.getElementById("upload-area");
+const imgInput    = document.getElementById("img-input");
+const previewsEl  = document.getElementById("img-previews");
+const imgErrorEl  = document.getElementById("img-error");
+
+uploadArea.addEventListener("click", () => imgInput.click());
+
+uploadArea.addEventListener("dragover", e => {
+  e.preventDefault();
+  uploadArea.classList.add("drag-over");
+});
+
+uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("drag-over"));
+
+uploadArea.addEventListener("drop", e => {
+  e.preventDefault();
+  uploadArea.classList.remove("drag-over");
+  handleFiles(Array.from(e.dataTransfer.files));
+});
+
+imgInput.addEventListener("change", e => {
+  handleFiles(Array.from(e.target.files));
+});
+
+function handleFiles(newFiles) {
+  const maxBytes = CONFIG.MAX_IMAGE_SIZE_MB * 1024 * 1024;
+  const accepted = [];
+  const rejected = [];
+
+  // Per-file validation BEFORE combining
+  for (const file of newFiles) {
+    if (!file.type.startsWith("image/")) {
+      rejected.push(`${file.name}: not an image`);
+    } else if (file.size > maxBytes) {
+      rejected.push(`${file.name}: exceeds ${CONFIG.MAX_IMAGE_SIZE_MB}MB (${(file.size/1024/1024).toFixed(1)}MB)`);
+    } else {
+      accepted.push(file);
+    }
+  }
+
+  // Merge with existing, cap at max
+  const combined = [...selectedFiles, ...accepted].slice(0, CONFIG.MAX_IMAGES);
+
+  if (rejected.length) {
+    imgErrorEl.style.display = "block";
+    imgErrorEl.textContent   = rejected[0];
+    if (accepted.length === 0) return; // nothing valid to add
+  } else {
+    imgErrorEl.style.display = "none";
+  }
+
+  if (combined.length >= CONFIG.MAX_IMAGES && accepted.length > 0) {
+    imgErrorEl.style.display = "block";
+    imgErrorEl.textContent   = `Maximum ${CONFIG.MAX_IMAGES} images allowed.`;
+  }
+
+  selectedFiles = combined;
+  renderPreviews();
+}
+
+function renderPreviews() {
+  previewsEl.innerHTML = "";
+  selectedFiles.forEach((file, idx) => {
+    const url  = URL.createObjectURL(file);
+    const item = document.createElement("div");
+    item.className = "img-preview-item";
+    item.innerHTML = `
+      <img src="${url}" alt="Preview ${idx+1}">
+      <button class="remove-img" type="button" data-idx="${idx}">✕</button>`;
+    previewsEl.appendChild(item);
+  });
+
+  previewsEl.querySelectorAll(".remove-img").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedFiles.splice(parseInt(btn.dataset.idx), 1);
+      renderPreviews();
+    });
+  });
+}
+
+// ── Live Validation ───────────────────────────────────────────
+document.querySelectorAll("#enlist-form input, #enlist-form select, #enlist-form textarea").forEach(el => {
+  el.addEventListener("blur", () => validateField(el));
+});
+
+// ── Submit ────────────────────────────────────────────────────
+document.getElementById("enlist-form").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  if (!validateForm(document.getElementById("enlist-form"))) {
+    showToast("Please fix the errors above.", "error");
+    return;
+  }
+
+  const btn = document.getElementById("submit-btn");
+  btn.disabled    = true;
+  btn.textContent = "Uploading images…";
+
+  try {
+    const fd = new FormData(e.target);
+    let imageUrls = [];
+
+    if (selectedFiles.length > 0) {
+      btn.textContent = `Uploading ${selectedFiles.length} image(s) to Cloudinary…`;
+      imageUrls = await uploadToCloudinary(selectedFiles);
+    }
+
+    btn.textContent = "Saving listing…";
+
+    await submitEnlistRequest({
+      bookName:     fd.get("bookName"),
+      author:       fd.get("author"),
+      pubDate:      fd.get("pubDate"),
+      subject:      fd.get("subject"),
+      condition:    fd.get("condition"),
+      description:  fd.get("description") || "",
+      sellingPrice: parseFloat(fd.get("sellingPrice")) || 0,
+      rentingPrice: fd.get("rentingPrice") ? parseFloat(fd.get("rentingPrice")) : null,
+      phone:        fd.get("phone"),
+      sellerName:   fd.get("sellerName"),
+      address:      fd.get("address"),
+      images:       imageUrls
+    });
+
+    openModal("success-modal");
+    e.target.reset();
+    selectedFiles = [];
+    renderPreviews();
+
+  } catch (err) {
+    console.error(err);
+    showToast("Submission failed. Please try again.", "error");
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = "Submit for Review →";
+  }
+});
+</script>
+</body>
+</html>
