@@ -124,7 +124,7 @@ export async function addBook(bookData) {
     ...bookData,
     approved: true,
     sold: false,
-    createdAt: serverTimestamp()
+    createdAt: new Date().toISOString()
   });
 }
 
@@ -145,11 +145,20 @@ export async function deleteBook(id) {
 
 /** Submit an enlist request (user) */
 export async function submitEnlistRequest(data) {
-  return addDoc(collection(db, "enlist_requests"), {
+  // Use plain ISO string instead of serverTimestamp() to avoid silent hangs
+  const payload = {
     ...data,
     approved: false,
-    createdAt: serverTimestamp()
-  });
+    createdAt: new Date().toISOString()
+  };
+
+  // Race against a 10-second timeout so we fail loudly instead of freezing
+  const writePromise = addDoc(collection(db, "enlist_requests"), payload);
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Firestore write timed out after 10s — check your internet connection or Firestore rules.")), 10000)
+  );
+
+  return Promise.race([writePromise, timeoutPromise]);
 }
 
 /** Get all pending enlist requests (admin) */
