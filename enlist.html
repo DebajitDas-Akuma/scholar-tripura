@@ -325,9 +325,11 @@ document.getElementById("enlist-form").addEventListener("submit", async e => {
     if (selectedFiles.length > 0) {
       btn.textContent = `Uploading ${selectedFiles.length} image(s) to Cloudinary…`;
       imageUrls = await uploadToCloudinary(selectedFiles);
+      console.log("✅ Cloudinary upload done:", imageUrls);
     }
 
     btn.textContent = "Saving listing…";
+    console.log("⏳ Writing to Firestore enlist_requests…");
 
     await submitEnlistRequest({
       bookName:     fd.get("bookName"),
@@ -344,14 +346,16 @@ document.getElementById("enlist-form").addEventListener("submit", async e => {
       images:       imageUrls
     });
 
+    console.log("✅ Firestore write successful!");
     openModal("success-modal");
     e.target.reset();
     selectedFiles = [];
     renderPreviews();
 
   } catch (err) {
-    console.error(err);
-    showToast("Submission failed. Please try again.", "error");
+    // Show the REAL error so we know exactly what failed
+    console.error("❌ Enlist error:", err.code, err.message, err);
+    showToast(`Failed: ${err.message}`, "error");
   } finally {
     btn.disabled    = false;
     btn.textContent = "Submit for Review →";
