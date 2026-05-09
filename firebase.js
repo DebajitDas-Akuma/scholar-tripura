@@ -43,13 +43,13 @@ import {
 
 // ── Firebase Config ──────────────────────────────────────────
 const firebaseConfig = {
-  apiKey:            "AIzaSyAIr6wIaIBiQg-jQnNccM91vIgTTvWWfLE",
-  authDomain:        "scholar-tripura.firebaseapp.com",
-  projectId:         "scholar-tripura",
-  storageBucket:     "scholar-tripura.firebasestorage.app",
-  messagingSenderId: "885403571608",
-  appId:             "1:885403571608:web:490fcd51e240e78a9087ed",
-  measurementId:     "G-PELZTSRY48"
+  apiKey:            "AIzaSyB4SgYlT2AKghLLblRSjp2tIa0bqmc84YA",
+  authDomain:        "scholartripura.firebaseapp.com",
+  projectId:         "scholartripura",
+  storageBucket:     "scholartripura.firebasestorage.app",
+  messagingSenderId: "152248757277",
+  appId:             "1:152248757277:web:409bda68d1fabdc9a16af4",
+  measurementId:     "G-2Z7D0SB62F"
 };
 
 // ── Init ─────────────────────────────────────────────────────
@@ -123,8 +123,8 @@ export async function deleteBook(id) {
 // submitEnlistRequest uses Firestore REST API directly (pure fetch, no WebSocket)
 // This bypasses the SDK's WebSocket which times out on Cloudflare
 export async function submitEnlistRequest(data) {
-  const projectId = "scholar-tripura";
-  const apiKey    = "AIzaSyAIr6wIaIBiQg-jQnNccM91vIgTTvWWfLE";
+  const projectId = "scholartripura";
+  const apiKey    = "AIzaSyB4SgYlT2AKghLLblRSjp2tIa0bqmc84YA";
   const url       = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/enlist_requests?key=${apiKey}`;
 
   // Convert data to Firestore REST format
