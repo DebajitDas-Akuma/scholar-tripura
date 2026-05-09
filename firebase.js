@@ -120,49 +120,21 @@ export async function deleteBook(id) {
 
 // ── Enlist Requests ───────────────────────────────────────────
 
-// submitEnlistRequest uses Firestore REST API directly (pure fetch, no WebSocket)
-// This bypasses the SDK's WebSocket which times out on Cloudflare
+// submitEnlistRequest — uses SDK with 15s timeout
 export async function submitEnlistRequest(data) {
-  const projectId = "scholartripura";
-  const apiKey    = "AIzaSyB4SgYlT2AKghLLblRSjp2tIa0bqmc84YA";
-  const url       = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/enlist_requests?key=${apiKey}`;
+  const payload = {
+    ...data,
+    approved:  false,
+    createdAt: new Date().toISOString()
+  };
 
-  // Convert data to Firestore REST format
-  const fields = {};
-  for (const [key, val] of Object.entries(data)) {
-    if (val === null || val === undefined) {
-      fields[key] = { nullValue: null };
-    } else if (typeof val === "boolean") {
-      fields[key] = { booleanValue: val };
-    } else if (typeof val === "number") {
-      fields[key] = { doubleValue: val };
-    } else if (Array.isArray(val)) {
-      fields[key] = {
-        arrayValue: {
-          values: val.map(v => ({ stringValue: String(v) }))
-        }
-      };
-    } else {
-      fields[key] = { stringValue: String(val) };
-    }
-  }
+  // Race between Firestore write and 15 second timeout
+  const writePromise = addDoc(collection(db, "enlist_requests"), payload);
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Firestore timeout — saved to Sheets instead")), 15000)
+  );
 
-  // Add extra fields
-  fields.approved    = { booleanValue: false };
-  fields.createdAt   = { stringValue: new Date().toISOString() };
-
-  const res = await fetch(url, {
-    method:  "POST",
-    headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify({ fields })
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || `Firestore REST error ${res.status}`);
-  }
-
-  return res.json();
+  return Promise.race([writePromise, timeoutPromise]);
 }
 
 // Admin reads enlist requests via SDK (admin is authenticated, no timeout issue)
