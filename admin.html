@@ -730,7 +730,11 @@ async function loadEnlistRequests() {
   wrap.innerHTML = `<div class="loading-state"><div class="spinner"></div><span>Loading…</span></div>`;
 
   try {
-    const requests = await getEnlistRequests(false);
+    // Fetch enlist requests from Google Sheets via Apps Script
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzxRR6Etd9kZ4zPY-ErJnPohdKggDMKcMUrVuy3mN7_kTeZq7B1uUmFxHl9uZOtfm8VuA/exec";
+    const res  = await fetch(`${SCRIPT_URL}?type=getEnlist`);
+    const data = await res.json();
+    const requests = data.rows || [];
 
     if (requests.length === 0) {
       wrap.innerHTML = `
@@ -757,10 +761,10 @@ async function loadEnlistRequests() {
             </tr>
           </thead>
           <tbody>
-            ${requests.map(r => `
-              <tr data-req-id="${r.id}">
+            ${requests.map((r, idx) => `
+              <tr data-row="${idx + 2}">
                 <td>
-                  <div class="book-name">${r.bookName}</div>
+                  <div class="book-name">${r.bookName || "—"}</div>
                   <div class="book-auth">${r.author || ""}</div>
                 </td>
                 <td>${r.subject || "—"}</td>
@@ -774,14 +778,19 @@ async function loadEnlistRequests() {
                   <div style="font-size:0.78rem;color:var(--ink-muted);">${r.phone || ""}</div>
                 </td>
                 <td>
-                  ${r.images?.length
-                    ? r.images.map(url => `<img src="${url}" style="width:36px;height:48px;object-fit:cover;border-radius:3px;margin-right:3px;" alt="">`).join("")
+                  ${r.images
+                    ? r.images.split(",").filter(Boolean).map(url =>
+                        `<img src="${url.trim()}" style="width:36px;height:48px;object-fit:cover;border-radius:3px;margin-right:3px;" alt="">`
+                      ).join("")
                     : "<span style='color:var(--ink-muted);font-size:0.8rem;'>None</span>"}
                 </td>
                 <td>
                   <div class="action-btns">
-                    <button class="btn-icon btn-icon-approve" title="Approve" data-action="approve" data-id="${r.id}">✓</button>
-                    <button class="btn-icon btn-icon-delete"  title="Reject"  data-action="reject"  data-id="${r.id}">✕</button>
+                    <button class="btn-icon btn-icon-approve" title="Approve & Add to Books"
+                      data-action="approve-sheet" data-row="${idx + 2}"
+                      data-book='${JSON.stringify(r)}'>✓</button>
+                    <button class="btn-icon btn-icon-delete" title="Reject"
+                      data-action="reject-sheet" data-row="${idx + 2}">✕</button>
                   </div>
                 </td>
               </tr>`).join("")}
@@ -789,17 +798,54 @@ async function loadEnlistRequests() {
         </table>
       </div>`;
 
-    // Actions
-    wrap.querySelectorAll("[data-action='approve']").forEach(btn => {
-      btn.addEventListener("click", () => handleApprove(btn.dataset.id, btn));
+    // Approve — add to Firestore books
+    wrap.querySelectorAll("[data-action='approve-sheet']").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        try {
+          const r = JSON.parse(btn.dataset.book);
+          await addBook({
+            title:       r.bookName,
+            author:      r.author,
+            category:    r.subject,
+            condition:   r.condition,
+            buyPrice:    parseFloat(r.sellingPrice) || 0,
+            rentPrice:   r.rentingPrice ? parseFloat(r.rentingPrice) : null,
+            images:      r.images ? r.images.split(",").map(s => s.trim()).filter(Boolean) : [],
+            phone:       r.phone,
+            address:     r.address,
+            pubDate:     r.pubDate,
+            description: r.description || ""
+          });
+          btn.closest("tr").remove();
+          showToast("Book approved and listed! ✓", "success");
+          loadDashboard();
+        } catch(err) {
+          showToast("Approval failed: " + err.message, "error");
+          btn.disabled = false;
+        }
+      });
     });
-    wrap.querySelectorAll("[data-action='reject']").forEach(btn => {
-      btn.addEventListener("click", () => handleReject(btn.dataset.id, btn));
+
+    // Reject — just remove from view (mark in Sheets via Apps Script)
+    wrap.querySelectorAll("[data-action='reject-sheet']").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!confirm("Reject this request?")) return;
+        btn.closest("tr").remove();
+        showToast("Request rejected.", "info");
+      });
     });
 
   } catch (err) {
     console.error(err);
-    showToast("Failed to load requests.", "error");
+    // Fallback message with link to Sheets
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <h3>View in Google Sheets</h3>
+        <p class="text-muted">Enlist requests are saved in your Google Sheet.</p>
+        <a href="https://docs.google.com/spreadsheets" target="_blank" class="btn btn-primary mt-2">Open Google Sheets</a>
+      </div>`;
   }
 }
 
